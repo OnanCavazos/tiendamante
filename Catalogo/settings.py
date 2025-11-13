@@ -6,15 +6,15 @@ pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY seguro usando variable de entorno
+# Clave secreta confidencial, obtenida de variable de entorno o valor por defecto para desarrollo
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-por-defecto-para-desarrollo')
 
-# Configura entorno (usar variable ENVIRONMENT para distinguir desarrollo y producción)
+# Detecta entorno: "production" o "development"
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 if ENVIRONMENT == 'production':
     DEBUG = False
-    # Construye ALLOWED_HOSTS dinámico con hostname de Azure
+    # ALLOWED_HOSTS incluye localhost más el hostname de Azure que se define automáticamente
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
     azure_host = os.environ.get('WEBSITE_HOSTNAME')
     if azure_host:
@@ -65,7 +65,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Catalogo.wsgi.application'
 
-# Base de datos - cambia según entorno
+# Parámetros de base de datos diferentes para producción y desarrollo
 if ENVIRONMENT == 'production':
     DATABASES = {
         'default': {
@@ -118,3 +118,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
