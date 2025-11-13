@@ -1,0 +1,76 @@
+{% extends 'base_nav.html' %}
+{% load static %}
+
+{% block title %}Tu Carrito{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-center"><i class="bi bi-cart3 text-success"></i> Tu carrito</h2>
+
+  {% if items %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Producto</th>
+            <th class="text-center">Precio</th>
+            <th class="text-center">Cantidad</th>
+            <th class="text-end">Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.nombre }}</td>
+            <td class="text-center">${{ item.precio|floatformat:2 }}</td>
+            <td class="text-center">
+              <form action="{% url 'actualizar_carrito' item.id %}" method="post" class="d-flex justify-content-center">
+                {% csrf_token %}
+                <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="99" class="form-control text-center" style="width:90px;">
+                <button type="submit" class="btn btn-outline-primary btn-sm ms-2">Actualizar</button>
+              </form>
+            </td>
+            <td class="text-end fw-semibold">${{ item.subtotal|floatformat:2 }}</td>
+            <td class="text-end">
+              <a href="{% url 'eliminar_del_carrito' item.id %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3" class="text-end">Total:</th>
+            <th class="text-end fs-5 text-success">${{ total|floatformat:2 }}</th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+      <a href="{% url 'catalogo' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left-circle me-1"></i> Seguir comprando
+      </a>
+
+      <!-- ✅ Procesar pago por POST -->
+      <form action="{% url 'procesar_pago' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-credit-card-2-back me-1"></i> Procesar pago
+        </button>
+      </form>
+    </div>
+
+  {% else %}
+    <div class="text-center text-muted">
+      <p class="mb-3">Aún no has agregado ningún producto.</p>
+      <a href="{% url 'catalogo' %}" class="btn btn-success">
+        <i class="bi bi-shop"></i> Ir al catálogo
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

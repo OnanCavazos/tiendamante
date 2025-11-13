@@ -1,0 +1,53 @@
+{% extends 'base_nav.html' %}
+{% block title %}Acerca de Tiendamente{% endblock %}
+{% block content %}
+<style>
+  .about-wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  .about-title { text-align: center; font-weight: 700; font-size: 36px; color: #0f172a; margin-top: 8px; }
+  .about-subtitle { text-align: center; color: #64748b; margin-bottom: 28px; }
+  .card { background: #ffffff; border-radius: 12px; padding: 22px; box-shadow: 0 2px 0 rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.08); border: 1px solid #e2e8f0; margin-bottom: 18px; }
+  .card h3 { display:flex; align-items:center; gap:10px; font-size:22px; color:#0f172a; margin:0 0 10px; }
+  .card p { color:#334155; margin:0; }
+  .tech-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-top:10px; }
+  .pill { display:flex; align-items:center; gap:8px; padding:10px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; color:#0f172a; font-weight:600; }
+  .features { list-style:none; padding-left:0; margin:10px 0 0; color:#334155; }
+  .features li { margin:8px 0; }
+  .icon { width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; background:#e9f0ff; color:#3b82f6; font-weight:700; }
+  @media (min-width: 900px){ .about-wrapper{ padding-top:36px; } }
+</style>
+
+<div class="about-wrapper">
+  <h1 class="about-title">Acerca de Tiendamente</h1>
+  <p class="about-subtitle">Descubre la historia y la tecnología detrás de nuestra plataforma</p>
+
+  <section class="card">
+    <h3><span class="icon">⚡</span> Propósito</h3>
+    <p>
+      Este sitio fue creado para mostrar un <strong>Catálogo de productos de Venta</strong> de manera moderna y profesional. Nuestro objetivo es proporcionar una experiencia de usuario intuitiva donde puedas explorar, buscar y descubrir una amplia variedad de productos organizados por categorías.
+    </p>
+  </section>
+
+  <section class="card">
+    <h3><span class="icon">🛠️</span> Tecnología Utilizada</h3>
+    <p>Este proyecto fue desarrollado utilizando las siguientes tecnologías:</p>
+    <div class="tech-grid">
+      <div class="pill"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%"></span> HTML</div>
+      <div class="pill"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%"></span> CSS</div>
+      <div class="pill"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%"></span> JavaScript</div>
+      <div class="pill"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%"></span> MySQL</div>
+      <div class="pill" style="grid-column: 1 / -1;"><span style="width:8px;height:8px;background:#3b82f6;border-radius:50%"></span> Django Framework</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3><span class="icon">🎚️</span> Características</h3>
+    <ul class="features">
+      <li>✓ Catálogo dinámico con múltiples categorías</li>
+      <li>✓ Sistema de login y registro de usuarios</li>
+      <li>✓ Carrito de compras funcional</li>
+      <li>✓ Interfaz moderna y responsive</li>
+      <li>✓ Diseño amigable y fácil de navegar</li>
+    </ul>
+  </section>
+</div>
+{% endblock %}

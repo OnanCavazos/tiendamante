@@ -1,0 +1,37 @@
+{% extends 'base_nav.html' %}
+{% block title %}Mis pedidos{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">Mis pedidos</h2>
+
+{% if pedidos %}
+<table class="table table-bordered text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in pedidos %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.fecha }}</td>
+            <td>${{ p.total }}</td>
+            <td>
+                <a class="btn btn-info btn-sm" href="{% url 'detalle_pedido' p.id %}">
+                    Ver detalle
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p class="text-center text-muted">Aún no tienes pedidos registrados.</p>
+{% endif %}
+
+{% endblock %}

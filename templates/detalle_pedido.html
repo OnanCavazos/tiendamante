@@ -1,0 +1,32 @@
+{% extends 'base_nav.html' %}
+{% block title %}Detalle del Pedido{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">Detalle del Pedido #{{ pedido.id }}</h2>
+
+<table class="table table-striped table-bordered text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio U.</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in pedido.detalles.all %}
+        <tr>
+            <td>{{ d.producto.nombre }}</td>
+            <td>{{ d.cantidad }}</td>
+            <td>${{ d.precio }}</td>
+            <td>${{ d.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="text-end">Total: <strong>${{ pedido.total }}</strong></h3>
+
+<a class="btn btn-secondary mt-3" href="{% url 'mis_pedidos' %}">Volver</a>
+
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends 'base_nav.html' %}
+{% load widget_tweaks %}
+{% block title %}Contacto{% endblock %}
+{% block content %}
+<style>
+  .contact-page { background:#f3f6fb; padding:24px 0 48px; }
+  .contact-header { text-align:center; margin-bottom:24px; }
+  .contact-badge { display:inline-block; background:#e7efff; color:#2b57ff; padding:6px 12px; border-radius:999px; font-weight:600; }
+  .contact-title { font-weight:800; font-size:32px; margin:8px 0 4px; }
+  .contact-sub { color:#6b7280; }
+  .card-soft { background:#fff; border-radius:12px; padding:16px; box-shadow:0 6px 20px rgba(0,0,0,.06); }
+  .contact-list .item { display:flex; gap:12px; align-items:flex-start; padding:10px 8px; border-radius:10px; }
+  .contact-list .icon { width:36px; height:36px; border-radius:10px; background:#e7efff; display:flex; align-items:center; justify-content:center; color:#2b57ff; }
+  .contact-list .label { font-weight:700; }
+  .contact-list .text-muted { color:#6b7280; margin:0; }
+  .social a { display:inline-flex; width:36px; height:36px; align-items:center; justify-content:center; border-radius:8px; margin-right:8px; color:#fff; }
+  .social .tw { background:#1da1f2; }
+  .social .fb { background:#1877f2; }
+  .social .ig { background:#e1306c; }
+  .social .pt { background:#bd081c; }
+  .contact-form .form-control { border-radius:10px; }
+  .btn-send { background:#1953ff; color:#fff; border:none; width:100%; padding:12px 16px; border-radius:10px; font-weight:700; }
+  .field-error { color:#b91c1c; font-size:0.9rem; margin-top:6px; }
+</style>
+
+<div class="contact-page">
+  <div class="container">
+    <div class="contact-header">
+      <span class="contact-badge">Estamos aquí para ayudarte</span>
+      <div class="contact-title">Contacto</div>
+      <div class="contact-sub">¿Tienes alguna pregunta? Nos encantaría escucharte</div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="card-soft contact-list mb-3">
+          <h5 class="mb-3">Información de Contacto</h5>
+          <div class="item">
+            <div class="icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></div>
+            <div>
+              <div class="label">Dirección</div>
+              <p class="text-muted">Av. Principal #123<br>Ciudad, Estado 12345</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon"><i class="bi bi-telephone" aria-hidden="true"></i></div>
+            <div>
+              <div class="label">Teléfono</div>
+              <p class="text-muted">+1 (555) 123-4567</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon"><i class="bi bi-envelope" aria-hidden="true"></i></div>
+            <div>
+              <div class="label">Email</div>
+              <p class="text-muted">info@tiendamante.com</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon"><i class="bi bi-clock" aria-hidden="true"></i></div>
+            <div>
+              <div class="label">Horario de Atención</div>
+              <p class="text-muted">Lun - Vie: 9:00 - 18:00<br>Sáb: 10:00 - 14:00</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-soft">
+          <h5 class="mb-3">Síguenos</h5>
+          <div class="social">
+            <a href="#" class="tw" aria-label="Twitter"><i class="bi bi-twitter" aria-hidden="true"></i></a>
+            <a href="#" class="fb" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+            <a href="#" class="ig" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+            <a href="#" class="pt" aria-label="Pinterest"><i class="bi bi-pinterest" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card-soft contact-form">
+          <h5 class="mb-3">Envíanos un Mensaje</h5>
+
+          {# Mostrar mensajes de Django (success / error) #}
+          {% if messages %}
+            {% for m in messages %}
+              <div class="alert alert-{{ m.tags|default:'info' }}" role="alert">{{ m }}</div>
+            {% endfor %}
+          {% endif %}
+
+          
+
+          <form method="post" action="{% url 'contacto' %}">
+
+
+            {% csrf_token %}
+            <div class="row g-3">
+              {% if form %}
+                {# Renderizado campo por campo para controlar markup y errores #}
+                <div class="col-md-6">
+                  <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
+                  {{ form.nombre|add_class:"form-control" }}
+                  {% if form.nombre.errors %}
+                    <div class="field-error">{{ form.nombre.errors.as_text|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                  <label for="{{ form.correo.id_for_label }}" class="form-label">Correo electrónico</label>
+                  {{ form.correo|add_class:"form-control" }}
+                  {% if form.correo.errors %}
+                    <div class="field-error">{{ form.correo.errors.as_text|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="col-12">
+                  <label for="{{ form.asunto.id_for_label }}" class="form-label">Asunto</label>
+                  {{ form.asunto|add_class:"form-control" }}
+                  {% if form.asunto.errors %}
+                    <div class="field-error">{{ form.asunto.errors.as_text|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="col-12">
+                  <label for="{{ form.mensaje.id_for_label }}" class="form-label">Mensaje</label>
+                  {{ form.mensaje|add_class:"form-control" }}
+                  {% if form.mensaje.errors %}
+                    <div class="field-error">{{ form.mensaje.errors.as_text|striptags }}</div>
+                  {% endif %}
+                </div>
+
+              {% else %}
+                {# Formulario HTML tradicional; usamos request.POST para mantener valores tras error (si está disponible) #}
+                <div class="col-md-6">
+                  <label for="id_nombre" class="form-label">Nombre</label>
+                  <input id="id_nombre" type="text" class="form-control" name="nombre"
+                         placeholder="Tu nombre completo"
+                         value="{{ request.POST.nombre|default_if_none:'' }}">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="id_correo" class="form-label">Correo electrónico</label>
+                  <input id="id_correo" type="email" class="form-control" name="correo"
+                         placeholder="tu@email.com"
+                         value="{{ request.POST.correo|default_if_none:'' }}">
+                </div>
+
+                <div class="col-12">
+                  <label for="id_asunto" class="form-label">Asunto</label>
+                  <input id="id_asunto" type="text" class="form-control" name="asunto"
+                         placeholder="Asunto del mensaje"
+                         value="{{ request.POST.asunto|default_if_none:'' }}">
+                </div>
+
+                <div class="col-12">
+                  <label for="id_mensaje" class="form-label">Mensaje</label>
+                  <textarea id="id_mensaje" class="form-control" name="mensaje" rows="6"
+                            placeholder="Escribe tu mensaje aquí...">{{ request.POST.mensaje|default_if_none:'' }}</textarea>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mt-3">
+              <button type="submit" class="btn-send" aria-label="Enviar mensaje">Enviar Mensaje</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
