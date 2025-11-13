@@ -9,13 +9,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY seguro usando variable de entorno
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-por-defecto-para-desarrollo')
 
-# Configura entorno (usar variable 'ENVIRONMENT' para distinguir)
+# Configura entorno (usar variable ENVIRONMENT para distinguir desarrollo y producción)
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 if ENVIRONMENT == 'production':
     DEBUG = False
-    # Establece el dominio de App Service o el hostname Azure
-    ALLOWED_HOSTS = [os.environ.get('WEBSITE_HOSTNAME', 'tu-app-name.azurewebsites.net')]
+    # Construye ALLOWED_HOSTS dinámico con hostname de Azure
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    azure_host = os.environ.get('WEBSITE_HOSTNAME')
+    if azure_host:
+        ALLOWED_HOSTS.append(azure_host)
 else:
     DEBUG = True
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
