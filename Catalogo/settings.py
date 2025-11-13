@@ -1,16 +1,27 @@
 from pathlib import Path
 import os
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = '739125'
-DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# SECRET_KEY seguro usando variable de entorno
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-por-defecto-para-desarrollo')
+
+# Configura entorno (usar variable 'ENVIRONMENT' para distinguir)
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
+
+if ENVIRONMENT == 'production':
+    DEBUG = False
+    # Establece el dominio de App Service o el hostname Azure
+    ALLOWED_HOSTS = [os.environ.get('WEBSITE_HOSTNAME', 'tu-app-name.azurewebsites.net')]
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
-    'django.contrib.admin',         
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -36,7 +47,7 @@ ROOT_URLCONF = 'Catalogo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],  
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -51,47 +62,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Catalogo.wsgi.application'
 
-# Configuración de base de datos - Local vs Cloud
-if os.getenv('GAE_APPLICATION', None):
-    # Estamos en Google Cloud Run (PRODUCCIÓN)
-    DEBUG = True
-    ALLOWED_HOSTS = ['*']
-    
+# Base de datos - cambia según entorno
+if ENVIRONMENT == 'production':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'HOST': '/cloudsql/' + os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
-            'USER': os.environ.get('DB_USER', 'root'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'NAME': os.environ.get('DB_NAME', 'tiendadm'),
+            'HOST': os.environ.get('MYSQL_HOST'),
+            'USER': os.environ.get('MYSQL_USER'),
+            'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+            'NAME': os.environ.get('MYSQL_DB_NAME'),
             'OPTIONS': {
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             },
         }
     }
-    
-    # Google Cloud Storage - CONFIGURACIÓN CORREGIDA
-    GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME')
-    GS_QUERYSTRING_AUTH = False  # ← LÍNEA CRÍTICA AGREGADA
-    
-    # Archivos estáticos en Cloud Storage
-    STORAGES = {
-        "default": {
-            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-        }
-    }
-    
-    STATIC_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/static/'
-    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
-    
-    # SECRET_KEY desde variable de entorno
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    
 else:
-    # Configuración LOCAL (desarrollo)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -102,14 +87,15 @@ else:
             'PORT': '3306',
             'OPTIONS': {
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            }, 
+            },
         }
     }
-    
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -120,6 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-es'
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
 USE_TZ = True
 
