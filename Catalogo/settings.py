@@ -6,24 +6,21 @@ pymysql.install_as_MySQLdb()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Clave secreta segura
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-por-defecto-para-desarrollo')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-insegura-desarrollo')
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 if ENVIRONMENT == 'production':
     DEBUG = False
-    # Reemplaza con el host que corresponda realmente a tu web app
     ALLOWED_HOSTS = ['tiendamante-fsa6hpgecwemh8ak.centralus-01.azurewebsites.net']
-    # Para Azure Database for MySQL el usuario es user@servidor
-    AZURE_DB_USER = os.environ.get('AZURE_MYSQL_USER', '') + 'xgjsdzgqnw@tiendam'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'HOST': os.environ.get('AZURE_MYSQL_HOST', 'tiendam.mysql.database.azure.com'),
-            'USER': AZURE_DB_USER,
+            'HOST': os.environ.get('AZURE_MYSQL_HOST', os.environ.get('DB_HOST', 'localhost')),
+            'PORT': os.environ.get('DB_PORT', '3306'),
+            'USER': os.environ.get('AZURE_MYSQL_USER', ''),
             'PASSWORD': os.environ.get('AZURE_MYSQL_PASSWORD', ''),
-            'NAME': os.environ.get('AZURE_MYSQL_NAME', 'tiendadm'),
+            'NAME': os.environ.get('AZURE_MYSQL_NAME', ''),
             'OPTIONS': {
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             },
@@ -31,7 +28,7 @@ if ENVIRONMENT == 'production':
     }
 else:
     DEBUG = True
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -112,8 +109,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
