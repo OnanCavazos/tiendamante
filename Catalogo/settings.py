@@ -13,15 +13,32 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-por-defecto-para-desarro
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 
 if ENVIRONMENT == 'production':
-    DEBUG = False
-    # ALLOWED_HOSTS incluye localhost más el hostname de Azure que se define automáticamente
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-    azure_host = os.environ.get('WEBSITE_HOSTNAME')
-    if azure_host:
-        ALLOWED_HOSTS.append(azure_host)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': os.environ.get('AZURE_MYSQL_HOST', 'tiendam.mysql.database.azure.com'),
+            'USER': os.environ.get('AZURE_MYSQL_USER', 'xgjsdzgqnw'),
+            'PASSWORD': os.environ.get('AZURE_MYSQL_PASSWORD', 'cavazos12.'),
+            'NAME': os.environ.get('AZURE_MYSQL_NAME', 'tiendadm'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 else:
-    DEBUG = True
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'tiendadm',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
