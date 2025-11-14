@@ -16,7 +16,7 @@ if ENVIRONMENT == 'production':
     # Reemplaza con el host que corresponda realmente a tu web app
     ALLOWED_HOSTS = ['tiendamante-fsa6hpgecwemh8ak.centralus-01.azurewebsites.net']
     # Para Azure Database for MySQL el usuario es user@servidor
-    AZURE_DB_USER = os.environ.get('AZURE_MYSQL_USER', '') + '@tiendam'
+    AZURE_DB_USER = os.environ.get('AZURE_MYSQL_USER', '') + 'xgjsdzgqnw@tiendam'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
